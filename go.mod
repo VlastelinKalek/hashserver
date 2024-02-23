@@ -1,4 +1,4 @@
-module hashserver
+module github.com/VlastelinKalek/hashserver
 
 go 1.22.0
 
