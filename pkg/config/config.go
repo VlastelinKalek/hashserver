@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Парсим .env файл
+// Парсим конфигурации из ENV файла
 func GetConfigENV(path, name string, cfg any) error {
 	// Задаем настройки конфигурации
 	viper.AddConfigPath(path)
