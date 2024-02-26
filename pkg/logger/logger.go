@@ -6,6 +6,7 @@ type Logger interface {
 	SetFormater(formatter logrus.Formatter)
 	SetLevel(level uint32)
 	Log() *logrus.Logger
+	SetHooks(hooks []logrus.Hook)
 }
 
 type log struct {
@@ -15,6 +16,13 @@ type log struct {
 // Создаем логгер
 func New() Logger {
 	return &log{log: logrus.New()}
+}
+
+// Установка хуков
+func (l *log) SetHooks(hooks []logrus.Hook) {
+	for _, hook := range hooks {
+		l.log.AddHook(hook)
+	}
 }
 
 // Устанавливаем логгеру формат
