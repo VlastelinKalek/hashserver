@@ -5,7 +5,8 @@ import "github.com/sirupsen/logrus"
 type Logger interface {
 	SetFormater(formatter logrus.Formatter)
 	SetLevel(level uint32)
-	Log() *logrus.Logger
+	WriteLog(level logrus.Level, message string, fields logrus.Fields)
+	ReturnPrintf() func(string, ...interface{})
 	SetHooks(hooks []logrus.Hook)
 }
 
@@ -36,7 +37,29 @@ func (l *log) SetLevel(level uint32) {
 	l.log.SetLevel(logrus.Level(level))
 }
 
-// Получить логгер
-func (l *log) Log() *logrus.Logger {
-	return l.log
+// Отдаем функцию для логгирования
+func (l *log) ReturnPrintf() func(string, ...interface{}) {
+	return l.log.Printf
+}
+
+// Запись информации в логгер
+func (l *log) WriteLog(level logrus.Level, message string, fields logrus.Fields) {
+	entry := l.log.WithFields(fields)
+
+	switch level {
+	case logrus.DebugLevel:
+		entry.Debug(message)
+	case logrus.InfoLevel:
+		entry.Info(message)
+	case logrus.WarnLevel:
+		entry.Warn(message)
+	case logrus.ErrorLevel:
+		entry.Error(message)
+	case logrus.FatalLevel:
+		entry.Fatal(message)
+	case logrus.PanicLevel:
+		entry.Panic(message)
+	default:
+		entry.Info(message)
+	}
 }
